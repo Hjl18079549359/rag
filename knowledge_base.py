@@ -37,12 +37,13 @@ def get_string_md5(input_str: str ,encoding='utf-8' ):
 
 class KnowledgeBaseService:
     def __init__(self):
+        # 如果文件夹不存在则创建，如果存在则跳过
         os.makedirs(config.persist_directory, exist_ok=True)
 
         self.chroma=Chroma(
-            collection_name=config.collection_name,
+            collection_name=config.collection_name,#数据库名
             embedding_function=DashScopeEmbeddings(model="text-embedding-v4"),
-            persist_directory=config.persist_directory,
+            persist_directory=config.persist_directory,#数据库本地存储文件夹
         )#向量存储实例Chroma向量数据库对象
         self.spliter=RecursiveCharacterTextSplitter(
             chunk_size=config.chunk_size,
