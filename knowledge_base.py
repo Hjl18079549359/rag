@@ -38,11 +38,41 @@ def get_string_md5(input_str: str ,encoding='utf-8' ):
 class KnowledgeBaseService:
     def __init__(self):
         os.makedirs(config.persist_directory, exist_ok=True)
-        self.chroma =None
-        self.spliter=None
+
+        self.chroma=Chroma(
+            collection_name=config.collection_name,
+            embedding_function=DashScopeEmbeddings(model="text-embedding-v4"),
+            persist_directory=config.persist_directory,
+        )#向量存储实例Chroma向量数据库对象
+        self.spliter=RecursiveCharacterTextSplitter(
+            chunk_size=config.chunk_size,
+            chunk_overlap=config.chunk_overlap,
+            separators=config.separators,
+            length_function=len
+        )#文本分割器的对象
+
     def upload_by_str(self,data,filename):
         # 将传入的字符串，进行向量化，存入向量数据库中
-        pass
+#         先得到传入字符串的md5值
+        md5_hex=get_string_md5(data)
+        if check_md5(md5_hex):
+            return "[跳过]内容已经存在知识库中"
+        if len(data)>config.max_split_char_number:
+            knowledeg_chunks=self.spliter.split_text(data)
+        else:
+            knowledeg_chunks=[data]
+        metadata={
+            "source":filename,
+            "create_time":datetime.now().strftime("%Y-%m-%d %H:%M:%S"),
+            "operator":"huang"
+
+        }
+        self.chroma.add_texts(
+            knowledeg_chunks,
+            metadatas=[metadata for _ in knowledeg_chunks],
+        )
+        save_md5(md5_hex)
+        return "[成功]，内容已经成功载入向量库"
 
 
 if __name__ == '__main__':
@@ -54,4 +84,7 @@ if __name__ == '__main__':
     # print(r1)
     # print(r2)
     # print(r3)
-    print(check_md5("8bc9d300be4e7d15e6184b8a0b146723"))
+    # print(check_md5("8bc9d300be4e7d15e6184b8a0b146723"))
+    service=KnowledgeBaseService()
+    res=service.upload_by_str("黄金来","testfile.txt")
+    print(res)
