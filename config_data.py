@@ -12,3 +12,6 @@ max_split_char_number=1000 #文本分隔的阈值
 
 # 检索返回匹配的文档数量
 similarity_threshold=2
+
+embedding_model_name="text-embedding-v4"
+chat_model_name="qwen3-max"
