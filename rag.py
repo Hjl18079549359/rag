@@ -62,13 +62,8 @@ class RagService(object):
         )
         return conversation_chain
 if __name__ == '__main__':
-    # session_id配置
-    session_config={
-        "configurable":{
-            "session_id":"huang",
-        }
-    }
+
     service=RagService()
     chain=service.chain
-    res=chain.invoke({"input":"身高165，尺码推荐"},session_config)
+    res=chain.invoke({"input":"身高165，尺码推荐"},config.session_config)
     print(res)

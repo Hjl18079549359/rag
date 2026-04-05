@@ -15,3 +15,11 @@ similarity_threshold=2
 
 embedding_model_name="text-embedding-v4"
 chat_model_name="qwen3-max"
+
+
+# session_id配置
+session_config={
+        "configurable":{
+            "session_id":"huang",
+        }
+    }
