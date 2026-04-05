@@ -9,3 +9,6 @@ chunk_size=1000
 chunk_overlap=100
 separators=["\n\n","\n",",",".","!","?","，","。","！","？"," ",""]
 max_split_char_number=1000 #文本分隔的阈值
+
+# 检索返回匹配的文档数量
+similarity_threshold=2
